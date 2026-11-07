@@ -1,9 +1,11 @@
 package br.com.fiap.semaforo.controller;
 
+import br.com.fiap.semaforo.dto.AlertaFiltro;
 import br.com.fiap.semaforo.dto.AlertaRequest;
 import br.com.fiap.semaforo.dto.AlertaResponse;
 import br.com.fiap.semaforo.service.AlertaService;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,9 +25,9 @@ public class AlertaController {
     }
 
     @GetMapping
-    public Page<AlertaResponse> listar(
+    public Page<AlertaResponse> listar(@ParameterObject AlertaFiltro filtro,
             @PageableDefault(size = 10, sort = "criadoEm", direction = Sort.Direction.DESC) Pageable pageable) {
-        return service.listar(pageable);
+        return service.listar(filtro, pageable);
     }
 
     @GetMapping("/{id}")

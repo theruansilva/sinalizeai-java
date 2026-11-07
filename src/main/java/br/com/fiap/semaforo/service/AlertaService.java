@@ -1,5 +1,6 @@
 package br.com.fiap.semaforo.service;
 
+import br.com.fiap.semaforo.dto.AlertaFiltro;
 import br.com.fiap.semaforo.dto.AlertaRequest;
 import br.com.fiap.semaforo.dto.AlertaResponse;
 import br.com.fiap.semaforo.exception.RecursoNaoEncontradoException;
@@ -8,6 +9,7 @@ import br.com.fiap.semaforo.model.Alerta;
 import br.com.fiap.semaforo.model.Cruzamento;
 import br.com.fiap.semaforo.model.FonteAlerta;
 import br.com.fiap.semaforo.repository.AlertaRepository;
+import br.com.fiap.semaforo.repository.AlertaSpecifications;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,8 +27,8 @@ public class AlertaService {
     }
 
     @Transactional(readOnly = true)
-    public Page<AlertaResponse> listar(Pageable pageable) {
-        return alertas.findAll(pageable).map(AlertaResponse::de);
+    public Page<AlertaResponse> listar(AlertaFiltro filtro, Pageable pageable) {
+        return alertas.findAll(AlertaSpecifications.com(filtro), pageable).map(AlertaResponse::de);
     }
 
     @Transactional(readOnly = true)

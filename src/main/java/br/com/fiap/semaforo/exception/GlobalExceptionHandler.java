@@ -9,6 +9,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.LocalDateTime;
@@ -36,9 +37,10 @@ public class GlobalExceptionHandler {
         return erro(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), req);
     }
 
-    @ExceptionHandler({HttpMessageNotReadableException.class, MethodArgumentTypeMismatchException.class})
+    @ExceptionHandler({HttpMessageNotReadableException.class, MethodArgumentTypeMismatchException.class,
+            HandlerMethodValidationException.class})
     public ResponseEntity<ErroResponse> malformado(Exception ex, HttpServletRequest req) {
-        return erro(HttpStatus.BAD_REQUEST, "Requisição malformada ou parâmetro com tipo inválido", req);
+        return erro(HttpStatus.BAD_REQUEST, "Requisição malformada ou parâmetro inválido", req);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)

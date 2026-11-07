@@ -2,7 +2,10 @@ package br.com.fiap.semaforo.controller;
 
 import br.com.fiap.semaforo.dto.*;
 import br.com.fiap.semaforo.service.CruzamentoService;
+import br.com.fiap.semaforo.model.Modo;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -10,6 +13,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/cruzamentos")
@@ -22,8 +27,14 @@ public class CruzamentoController {
     }
 
     @GetMapping
-    public Page<CruzamentoResponse> listar(@PageableDefault(size = 10, sort = "nome") Pageable pageable) {
-        return service.listar(pageable);
+    public Page<CruzamentoResponse> listar(@RequestParam(required = false) Modo modo,
+                                           @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
+        return service.listar(modo, pageable);
+    }
+
+    @GetMapping("/em-risco")
+    public List<CruzamentoResponse> emRisco(@RequestParam(defaultValue = "24") @Min(1) @Max(720) int horas) {
+        return service.emRisco(horas);
     }
 
     @GetMapping("/{id}")

@@ -4,6 +4,7 @@ import br.com.fiap.semaforo.dto.*;
 import br.com.fiap.semaforo.exception.RecursoNaoEncontradoException;
 import br.com.fiap.semaforo.model.Cruzamento;
 import br.com.fiap.semaforo.model.LeituraSensor;
+import br.com.fiap.semaforo.model.Modo;
 import br.com.fiap.semaforo.repository.AlertaRepository;
 import br.com.fiap.semaforo.repository.CruzamentoRepository;
 import br.com.fiap.semaforo.repository.LeituraSensorRepository;
@@ -11,6 +12,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class CruzamentoService {
@@ -27,8 +31,15 @@ public class CruzamentoService {
     }
 
     @Transactional(readOnly = true)
-    public Page<CruzamentoResponse> listar(Pageable pageable) {
-        return cruzamentos.findAll(pageable).map(CruzamentoResponse::de);
+    public Page<CruzamentoResponse> listar(Modo modo, Pageable pageable) {
+        return (modo == null ? cruzamentos.findAll(pageable) : cruzamentos.findByModo(modo, pageable))
+                .map(CruzamentoResponse::de);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CruzamentoResponse> emRisco(int horas) {
+        return cruzamentos.findComAguaAcimaDoLimiteDesde(LocalDateTime.now().minusHours(horas)).stream()
+                .map(CruzamentoResponse::de).toList();
     }
 
     @Transactional(readOnly = true)
