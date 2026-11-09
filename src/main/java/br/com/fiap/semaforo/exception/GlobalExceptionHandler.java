@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,6 +42,11 @@ public class GlobalExceptionHandler {
             HandlerMethodValidationException.class})
     public ResponseEntity<ErroResponse> malformado(Exception ex, HttpServletRequest req) {
         return erro(HttpStatus.BAD_REQUEST, "Requisição malformada ou parâmetro inválido", req);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErroResponse> credenciais(AuthenticationException ex, HttpServletRequest req) {
+        return erro(HttpStatus.UNAUTHORIZED, "E-mail ou senha inválidos", req);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)

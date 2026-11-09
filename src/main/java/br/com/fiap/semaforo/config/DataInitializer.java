@@ -3,10 +3,13 @@ package br.com.fiap.semaforo.config;
 import br.com.fiap.semaforo.dto.AlertaRequest;
 import br.com.fiap.semaforo.dto.CruzamentoRequest;
 import br.com.fiap.semaforo.dto.LeituraRequest;
+import br.com.fiap.semaforo.model.Papel;
 import br.com.fiap.semaforo.model.Severidade;
 import br.com.fiap.semaforo.repository.CruzamentoRepository;
 import br.com.fiap.semaforo.service.AlertaService;
 import br.com.fiap.semaforo.service.CruzamentoService;
+import br.com.fiap.semaforo.service.UsuarioService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -17,16 +20,26 @@ public class DataInitializer implements CommandLineRunner {
     private final CruzamentoRepository repo;
     private final CruzamentoService cruzamentos;
     private final AlertaService alertas;
+    private final UsuarioService usuarios;
+    private final String senhaDemo;
 
-    public DataInitializer(CruzamentoRepository repo, CruzamentoService cruzamentos, AlertaService alertas) {
+    public DataInitializer(CruzamentoRepository repo, CruzamentoService cruzamentos, AlertaService alertas,
+                           UsuarioService usuarios, @Value("${app.senha-demo:Semaforo@2026}") String senhaDemo) {
         this.repo = repo;
         this.cruzamentos = cruzamentos;
         this.alertas = alertas;
+        this.usuarios = usuarios;
+        this.senhaDemo = senhaDemo;
     }
 
     @Override
     public void run(String... args) {
         if (repo.count() > 0) return;
+        // Usuários de teste por papel (senha de demonstração, não é credencial real; troque com APP_SENHA_DEMO)
+        usuarios.criar("Admin Defesa Civil", "admin@semaforo.dev", senhaDemo, Papel.ADMIN);
+        usuarios.criar("Operador CCO", "operador@semaforo.dev", senhaDemo, Papel.OPERADOR);
+        usuarios.criar("Cidadã Teste", "cidadao@semaforo.dev", senhaDemo, Papel.CIDADAO);
+
         var mauaVoluntarios = cruzamentos.criar(new CruzamentoRequest(
                 "Av. Mauá x R. Voluntários da Pátria", "Porto Alegre", "RS", -30.0277, -51.2287, 30));
         cruzamentos.criar(new CruzamentoRequest(
