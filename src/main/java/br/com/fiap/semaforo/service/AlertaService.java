@@ -10,6 +10,8 @@ import br.com.fiap.semaforo.model.Cruzamento;
 import br.com.fiap.semaforo.model.FonteAlerta;
 import br.com.fiap.semaforo.repository.AlertaRepository;
 import br.com.fiap.semaforo.repository.AlertaSpecifications;
+import br.com.fiap.semaforo.config.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,8 @@ public class AlertaService {
         return AlertaResponse.de(carregar(id));
     }
 
+    // Um alerta muda o modo de vários cruzamentos do município: limpa o cache inteiro.
+    @CacheEvict(cacheNames = {CacheConfig.MODO, CacheConfig.CRUZAMENTO}, allEntries = true)
     @Transactional
     public AlertaResponse criar(AlertaRequest req) {
         Alerta a = new Alerta();
@@ -46,6 +50,8 @@ public class AlertaService {
         return AlertaResponse.de(a);
     }
 
+    // Um alerta muda o modo de vários cruzamentos do município: limpa o cache inteiro.
+    @CacheEvict(cacheNames = {CacheConfig.MODO, CacheConfig.CRUZAMENTO}, allEntries = true)
     @Transactional
     public AlertaResponse atualizar(Long id, AlertaRequest req) {
         Alerta a = carregar(id);
@@ -61,6 +67,8 @@ public class AlertaService {
         return AlertaResponse.de(a);
     }
 
+    // Um alerta muda o modo de vários cruzamentos do município: limpa o cache inteiro.
+    @CacheEvict(cacheNames = {CacheConfig.MODO, CacheConfig.CRUZAMENTO}, allEntries = true)
     @Transactional
     public AlertaResponse encerrar(Long id) {
         Alerta a = carregar(id);
@@ -69,6 +77,8 @@ public class AlertaService {
         return AlertaResponse.de(a);
     }
 
+    // Um alerta muda o modo de vários cruzamentos do município: limpa o cache inteiro.
+    @CacheEvict(cacheNames = {CacheConfig.MODO, CacheConfig.CRUZAMENTO}, allEntries = true)
     @Transactional
     public void excluir(Long id) {
         Alerta a = carregar(id);

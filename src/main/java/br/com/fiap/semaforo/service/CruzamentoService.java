@@ -8,6 +8,9 @@ import br.com.fiap.semaforo.model.Modo;
 import br.com.fiap.semaforo.repository.AlertaRepository;
 import br.com.fiap.semaforo.repository.CruzamentoRepository;
 import br.com.fiap.semaforo.repository.LeituraSensorRepository;
+import br.com.fiap.semaforo.config.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -42,17 +45,20 @@ public class CruzamentoService {
                 .map(CruzamentoResponse::de).toList();
     }
 
+    @Cacheable(CacheConfig.CRUZAMENTO)
     @Transactional(readOnly = true)
     public CruzamentoResponse buscar(Long id) {
         return CruzamentoResponse.de(carregar(id));
     }
 
+    @Cacheable(CacheConfig.MODO)
     @Transactional(readOnly = true)
     public ModoResponse modo(Long id) {
         Cruzamento c = carregar(id);
         return new ModoResponse(c.getModo(), c.getVerdeSeg());
     }
 
+    @CacheEvict(cacheNames = {CacheConfig.MODO, CacheConfig.CRUZAMENTO}, allEntries = true)
     @Transactional
     public CruzamentoResponse criar(CruzamentoRequest req) {
         Cruzamento c = new Cruzamento();
@@ -62,6 +68,7 @@ public class CruzamentoService {
         return CruzamentoResponse.de(c);
     }
 
+    @CacheEvict(cacheNames = {CacheConfig.MODO, CacheConfig.CRUZAMENTO}, allEntries = true)
     @Transactional
     public CruzamentoResponse atualizar(Long id, CruzamentoRequest req) {
         Cruzamento c = carregar(id);
@@ -70,6 +77,7 @@ public class CruzamentoService {
         return CruzamentoResponse.de(c);
     }
 
+    @CacheEvict(cacheNames = {CacheConfig.MODO, CacheConfig.CRUZAMENTO}, allEntries = true)
     @Transactional
     public void excluir(Long id) {
         Cruzamento c = carregar(id);
@@ -77,6 +85,7 @@ public class CruzamentoService {
         cruzamentos.delete(c);
     }
 
+    @CacheEvict(cacheNames = {CacheConfig.MODO, CacheConfig.CRUZAMENTO}, allEntries = true)
     @Transactional
     public LeituraResponse registrarLeitura(Long id, LeituraRequest req) {
         Cruzamento c = carregar(id);

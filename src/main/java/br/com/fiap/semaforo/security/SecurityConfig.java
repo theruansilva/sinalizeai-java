@@ -32,7 +32,7 @@ import java.util.List;
 public class SecurityConfig {
 
     private static final String[] PUBLICOS = {
-            "/auth/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**",
+            "/auth/**", "/error", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**",
             "/actuator/health/**", "/actuator/info", "/h2-console/**"
     };
 
