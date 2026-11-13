@@ -4,6 +4,7 @@ import br.com.fiap.semaforo.dto.AlertaFiltro;
 import br.com.fiap.semaforo.dto.AlertaRequest;
 import br.com.fiap.semaforo.dto.AlertaResponse;
 import br.com.fiap.semaforo.service.AlertaService;
+import br.com.fiap.semaforo.service.CemadenSyncService;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
@@ -21,9 +22,11 @@ import org.springframework.web.bind.annotation.*;
 public class AlertaController {
 
     private final AlertaService service;
+    private final CemadenSyncService cemaden;
 
-    public AlertaController(AlertaService service) {
+    public AlertaController(AlertaService service, CemadenSyncService cemaden) {
         this.service = service;
+        this.cemaden = cemaden;
     }
 
     @GetMapping
@@ -31,6 +34,12 @@ public class AlertaController {
             @PageableDefault(size = 10, sort = "criadoEm", direction = Sort.Direction.DESC) @ParameterObject Pageable pageable,
             @Parameter(hidden = true) PagedResourcesAssembler<AlertaResponse> assembler) {
         return assembler.toModel(service.listar(filtro, pageable), Links::alerta);
+    }
+
+    /** Força a sincronização com o CEMADEN agora (sem esperar o agendamento de 5 min). */
+    @PostMapping("/cemaden/sincronizar")
+    public CemadenSyncService.Resultado sincronizarCemaden() {
+        return cemaden.sincronizar();
     }
 
     @GetMapping("/{id}")

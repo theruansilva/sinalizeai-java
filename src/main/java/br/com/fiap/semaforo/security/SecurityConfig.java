@@ -49,6 +49,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/cruzamentos/*/modo").permitAll()
                         .requestMatchers("/actuator/**", "/usuarios/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/alertas/cemaden/sincronizar").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/cruzamentos/*/leituras").hasAnyRole("OPERADOR", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/cruzamentos", "/alertas").hasAnyRole("OPERADOR", "ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/cruzamentos/*", "/alertas/*").hasAnyRole("OPERADOR", "ADMIN")
