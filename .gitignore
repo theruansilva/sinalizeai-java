@@ -35,3 +35,6 @@ out/
 ### Logs & Temp ###
 *.log
 *.tmp
+
+### Segredos locais ###
+.env

@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: semaforo
+      POSTGRES_USER: ${DB_USER:-semaforo}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?defina DB_PASSWORD no .env}
+    volumes:
+      - semaforo-db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks: [semaforo]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-semaforo} -d semaforo"]
+      interval: 5s
+      retries: 10
+
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/semaforo
+      DB_USER: ${DB_USER:-semaforo}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET:?defina JWT_SECRET no .env (32+ caracteres)}
+      CORS_ORIGINS: ${CORS_ORIGINS:-*}
+      CEMADEN_ENABLED: ${CEMADEN_ENABLED:-true}
+    ports:
+      - "8080:8080"
+    networks: [semaforo]
+    restart: unless-stopped
+
+volumes:
+  semaforo-db:
+
+networks:
+  semaforo:
