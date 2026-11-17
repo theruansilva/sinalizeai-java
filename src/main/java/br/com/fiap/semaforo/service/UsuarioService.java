@@ -31,7 +31,6 @@ public class UsuarioService {
         this.jwt = jwt;
     }
 
-    /** Cadastro público sempre cria CIDADAO; OPERADOR/ADMIN só por promoção de um ADMIN. */
     @Transactional
     public UsuarioResponse cadastrar(CadastroRequest req) {
         return UsuarioResponse.de(criar(req.nome(), req.email(), req.senha(), Papel.CIDADAO));
@@ -50,7 +49,6 @@ public class UsuarioService {
         return usuarios.save(u);
     }
 
-    /** Credencial errada lança BadCredentialsException, tratada como 401 no handler global. */
     @Transactional(readOnly = true)
     public TokenResponse login(LoginRequest req) {
         authManager.authenticate(new UsernamePasswordAuthenticationToken(req.email().trim().toLowerCase(), req.senha()));

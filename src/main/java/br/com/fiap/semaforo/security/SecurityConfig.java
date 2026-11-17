@@ -39,13 +39,12 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http, JwtAuthFilter jwtFilter, ObjectMapper mapper) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable) // API stateless com Bearer token: não há cookie de sessão
+                .csrf(AbstractHttpConfigurer::disable)
                 .cors(c -> { })
-                .headers(h -> h.frameOptions(f -> f.sameOrigin())) // console H2 em dev
+                .headers(h -> h.frameOptions(f -> f.sameOrigin()))
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLICOS).permitAll()
-                        // o dispositivo do semáforo consulta o modo sem login (só leitura, sem dado pessoal)
                         .requestMatchers(HttpMethod.GET, "/cruzamentos/*/modo").permitAll()
                         .requestMatchers("/actuator/**", "/usuarios/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/**").hasRole("ADMIN")
@@ -82,7 +81,6 @@ public class SecurityConfig {
         return cfg.getAuthenticationManager();
     }
 
-    /** CORS para o app Mobile (Flutter Web / emulador). Origens configuráveis por CORS_ORIGINS. */
     @Bean
     CorsConfigurationSource corsConfigurationSource(@Value("${cors.origins:*}") List<String> origens) {
         CorsConfiguration c = new CorsConfiguration();

@@ -105,7 +105,6 @@ public class CruzamentoService {
         return leituras.findByCruzamentoId(id, pageable).map(LeituraResponse::de);
     }
 
-    /** Reaplica a regra de modo com a leitura mais recente e os alertas ativos. */
     @Transactional
     public void recalcular(Cruzamento c) {
         ModoService.aplicar(c,

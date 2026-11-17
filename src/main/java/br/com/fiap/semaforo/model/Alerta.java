@@ -25,7 +25,6 @@ public class Alerta {
     @Column(nullable = false, length = 20)
     private FonteAlerta fonte;
 
-    /** Código do alerta na fonte externa (cod_alerta do CEMADEN); evita duplicar na sincronização. */
     @Column(name = "codigo_externo", unique = true, length = 40)
     private String codigoExterno;
 
@@ -41,7 +40,6 @@ public class Alerta {
     @Column(name = "criado_em", nullable = false)
     private LocalDateTime criadoEm = LocalDateTime.now();
 
-    /** Opcional: sem cruzamento, o alerta vale para todos os cruzamentos do município. */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cruzamento_id")
     private Cruzamento cruzamento;

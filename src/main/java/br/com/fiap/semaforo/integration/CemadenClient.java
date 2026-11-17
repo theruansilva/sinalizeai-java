@@ -9,7 +9,6 @@ import org.springframework.web.client.RestClient;
 
 import java.util.List;
 
-/** Cliente do painel de alertas do CEMADEN (endpoint público, não documentado oficialmente). */
 @Component
 public class CemadenClient {
 

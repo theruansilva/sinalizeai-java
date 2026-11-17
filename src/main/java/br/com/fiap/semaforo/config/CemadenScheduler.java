@@ -8,7 +8,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-/** Sincroniza alertas do CEMADEN periodicamente. Desligue com CEMADEN_ENABLED=false (ex.: demo offline). */
 @Component
 @EnableScheduling
 @ConditionalOnProperty(name = "cemaden.enabled", havingValue = "true", matchIfMissing = true)
@@ -27,7 +26,6 @@ public class CemadenScheduler {
         try {
             sync.sincronizar();
         } catch (Exception e) {
-            // Falha na fonte externa não pode derrubar a API; alertas atuais continuam valendo (plano B: POST /alertas).
             log.warn("Falha ao sincronizar CEMADEN: {}", e.getMessage());
         }
     }

@@ -15,7 +15,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-/** Lê "Authorization: Bearer <token>", valida e coloca o usuário no SecurityContext. */
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
@@ -34,13 +33,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (header != null && header.startsWith("Bearer ")) {
             jwt.validar(header.substring(7)).ifPresent(email -> {
                 try {
-                    // Papel lido do banco, não do token: rebaixar um usuário vale na hora.
                     var user = usuarios.loadUserByUsername(email);
                     var auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                     auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 } catch (UsernameNotFoundException ignored) {
-                    // usuário removido: segue sem autenticação e cai no 401
                 }
             });
         }

@@ -24,7 +24,6 @@ public class Cruzamento {
     private Double latitude;
     private Double longitude;
 
-    /** Nível da água (cm) a partir do qual o cruzamento entra em ATENCAO. */
     @Column(name = "limite_agua_cm", nullable = false)
     private Integer limiteAguaCm;
 
@@ -35,11 +34,9 @@ public class Cruzamento {
     @Column(name = "verde_seg", nullable = false)
     private Integer verdeSeg = 30;
 
-    // Leituras pertencem ao cruzamento: apagar o cruzamento apaga o histórico do sensor.
     @OneToMany(mappedBy = "cruzamento", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LeituraSensor> leituras = new ArrayList<>();
 
-    // Alertas têm vida própria (vêm do CEMADEN); não propagamos remoção.
     @OneToMany(mappedBy = "cruzamento")
     private List<Alerta> alertas = new ArrayList<>();
 

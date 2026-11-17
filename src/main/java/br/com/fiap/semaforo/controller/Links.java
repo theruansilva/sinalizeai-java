@@ -10,7 +10,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-/** Monta os links HATEOAS; as ações (atualizar, excluir, encerrar) só aparecem se o papel do usuário permite. */
 final class Links {
 
     private Links() { }
@@ -57,7 +56,6 @@ final class Links {
                 linkModo(l.cruzamentoId()));
     }
 
-    // modo() devolve um record (classe final): methodOn não consegue criar proxy, então montamos o caminho.
     private static Link linkModo(Long cruzamentoId) {
         return linkTo(CruzamentoController.class).slash(cruzamentoId).slash("modo").withRel("modo");
     }

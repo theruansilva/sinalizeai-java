@@ -19,10 +19,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-/**
- * Importa alertas do CEMADEN só para municípios que têm cruzamento cadastrado e encerra os que saíram do painel.
- * Depois recalcula o modo dos cruzamentos atingidos (EVACUACAO quando o nível é Alto/Muito Alto).
- */
 @Service
 public class CemadenSyncService {
 
@@ -61,7 +57,7 @@ public class CemadenSyncService {
         int importados = 0;
         for (AlertaCemaden a : recebidos) {
             if (a.codigo() == null || a.municipio() == null || a.uf() == null) continue;
-            if (a.status() != null && a.status() != 1) continue; // status 1 = ativo no painel
+            if (a.status() != null && a.status() != 1) continue;
             String codigo = PREFIXO + a.codigo();
             ativosNoPainel.add(codigo);
             String chave = chave(a.municipio(), a.uf());

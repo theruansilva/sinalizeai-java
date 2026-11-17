@@ -8,7 +8,6 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Filtros dinâmicos de alertas: só entram na consulta os parâmetros informados pelo app. */
 public final class AlertaSpecifications {
 
     private AlertaSpecifications() { }

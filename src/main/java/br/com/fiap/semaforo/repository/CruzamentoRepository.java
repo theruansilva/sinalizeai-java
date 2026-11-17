@@ -13,15 +13,10 @@ import java.util.List;
 
 public interface CruzamentoRepository extends JpaRepository<Cruzamento, Long> {
 
-    // Query methods derivados: filtros simples e fixos, o nome do método já é a consulta.
     Page<Cruzamento> findByModo(Modo modo, Pageable pageable);
 
     List<Cruzamento> findByMunicipioIgnoreCaseAndUfIgnoreCase(String municipio, String uf);
 
-    /**
-     * JPQL: compara a leitura com o limite do PRÓPRIO cruzamento (coluna x coluna) e usa subconsulta,
-     * o que não dá para expressar com query method.
-     */
     @Query("""
             select c from Cruzamento c
             where exists (select 1 from LeituraSensor l

@@ -129,10 +129,8 @@ class ApiIntegrationTest {
         org.assertj.core.api.Assertions.assertThat(r.importados()).isEqualTo(1);
         mvc.perform(get("/cruzamentos/" + id + "/modo")).andExpect(jsonPath("$.modo").value("EVACUACAO"));
 
-        // reenviar o mesmo alerta não duplica
         org.assertj.core.api.Assertions.assertThat(cemaden.aplicar(List.of(alto)).importados()).isZero();
 
-        // alerta sumiu do painel: é encerrado e o cruzamento volta ao normal
         org.assertj.core.api.Assertions.assertThat(cemaden.aplicar(List.of()).encerrados()).isEqualTo(1);
         mvc.perform(get("/cruzamentos/" + id + "/modo")).andExpect(jsonPath("$.modo").value("NORMAL"));
     }

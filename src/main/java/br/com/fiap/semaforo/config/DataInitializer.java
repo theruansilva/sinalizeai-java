@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-/** Popula cruzamentos de exemplo em Porto Alegre (região mais exposta ao El Niño) quando o banco está vazio. */
 @Component
 public class DataInitializer implements CommandLineRunner {
 
@@ -35,7 +34,6 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         if (repo.count() > 0) return;
-        // Usuários de teste por papel (senha de demonstração, não é credencial real; troque com APP_SENHA_DEMO)
         usuarios.criar("Admin Defesa Civil", "admin@semaforo.dev", senhaDemo, Papel.ADMIN);
         usuarios.criar("Operador CCO", "operador@semaforo.dev", senhaDemo, Papel.OPERADOR);
         usuarios.criar("Cidadã Teste", "cidadao@semaforo.dev", senhaDemo, Papel.CIDADAO);

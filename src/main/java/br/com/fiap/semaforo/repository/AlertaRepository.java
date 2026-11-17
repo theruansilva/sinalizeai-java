@@ -16,7 +16,6 @@ public interface AlertaRepository extends JpaRepository<Alerta, Long>, JpaSpecif
 
     List<Alerta> findByFonteAndAtivoTrue(FonteAlerta fonte);
 
-    /** Alertas ativos que valem para o cruzamento: os dele e os do município sem cruzamento definido. */
     @Query("""
             select a from Alerta a left join a.cruzamento c
             where a.ativo = true

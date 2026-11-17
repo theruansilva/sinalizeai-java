@@ -27,7 +27,6 @@ public class JwtService {
 
     public JwtService(@Value("${jwt.secret:}") String segredo, @Value("${jwt.expiration:PT8H}") Duration validade) {
         if (segredo.isBlank()) {
-            // Sem JWT_SECRET: chave aleatória (tokens deixam de valer ao reiniciar). Nada de segredo no repositório.
             log.warn("JWT_SECRET não definido; usando chave aleatória gerada na inicialização");
             this.chave = Jwts.SIG.HS256.key().build();
         } else {
@@ -48,7 +47,6 @@ public class JwtService {
                 .compact();
     }
 
-    /** Devolve o e-mail (subject) se o token for válido, assinado por nós e não expirado. */
     public Optional<String> validar(String token) {
         try {
             Claims c = Jwts.parser().verifyWith(chave).requireIssuer("semaforo-api").build()

@@ -3,7 +3,6 @@ package br.com.fiap.semaforo.model;
 public enum Severidade {
     BAIXA, MODERADA, ALTA, MUITO_ALTA;
 
-    /** Converte o campo "nivel" do CEMADEN (Moderado, Alto, Muito Alto). */
     public static Severidade deCemaden(String nivel) {
         if (nivel == null) return MODERADA;
         String n = nivel.trim().toUpperCase();

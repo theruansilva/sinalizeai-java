@@ -38,7 +38,6 @@ public class AlertaService {
         return AlertaResponse.de(carregar(id));
     }
 
-    // Um alerta muda o modo de vários cruzamentos do município: limpa o cache inteiro.
     @CacheEvict(cacheNames = {CacheConfig.MODO, CacheConfig.CRUZAMENTO}, allEntries = true)
     @Transactional
     public AlertaResponse criar(AlertaRequest req) {
@@ -50,7 +49,6 @@ public class AlertaService {
         return AlertaResponse.de(a);
     }
 
-    // Um alerta muda o modo de vários cruzamentos do município: limpa o cache inteiro.
     @CacheEvict(cacheNames = {CacheConfig.MODO, CacheConfig.CRUZAMENTO}, allEntries = true)
     @Transactional
     public AlertaResponse atualizar(Long id, AlertaRequest req) {
@@ -67,7 +65,6 @@ public class AlertaService {
         return AlertaResponse.de(a);
     }
 
-    // Um alerta muda o modo de vários cruzamentos do município: limpa o cache inteiro.
     @CacheEvict(cacheNames = {CacheConfig.MODO, CacheConfig.CRUZAMENTO}, allEntries = true)
     @Transactional
     public AlertaResponse encerrar(Long id) {
@@ -77,7 +74,6 @@ public class AlertaService {
         return AlertaResponse.de(a);
     }
 
-    // Um alerta muda o modo de vários cruzamentos do município: limpa o cache inteiro.
     @CacheEvict(cacheNames = {CacheConfig.MODO, CacheConfig.CRUZAMENTO}, allEntries = true)
     @Transactional
     public void excluir(Long id) {
@@ -87,7 +83,6 @@ public class AlertaService {
         propagar(a);
     }
 
-    /** Mudou um alerta: o modo dos cruzamentos atingidos precisa ser recalculado. */
     void propagar(Alerta a) {
         alertas.flush();
         if (a.getCruzamento() != null) cruzamentoService.recalcular(a.getCruzamento());

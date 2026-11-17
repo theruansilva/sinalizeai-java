@@ -36,7 +36,6 @@ public class AlertaController {
         return assembler.toModel(service.listar(filtro, pageable), Links::alerta);
     }
 
-    /** Força a sincronização com o CEMADEN agora (sem esperar o agendamento de 5 min). */
     @PostMapping("/cemaden/sincronizar")
     public CemadenSyncService.Resultado sincronizarCemaden() {
         return cemaden.sincronizar();

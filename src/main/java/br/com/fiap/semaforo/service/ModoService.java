@@ -8,12 +8,6 @@ import br.com.fiap.semaforo.model.Severidade;
 
 import java.util.List;
 
-/**
- * Regra de negócio central: decide o modo do semáforo.
- * EVACUACAO: alerta ativo ALTA/MUITO_ALTA (onda verde, verde longo para esvaziar a área).
- * ATENCAO: água acima do limite do cruzamento ou alerta MODERADA (amarelo piscante, verde 0).
- * NORMAL: verde de 30 s + 2 s por pedestre esperando, até 60 s (travessia acessível).
- */
 public final class ModoService {
 
     public static final int VERDE_PADRAO = 30;
