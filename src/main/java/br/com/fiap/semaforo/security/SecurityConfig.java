@@ -54,7 +54,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/cruzamentos/*", "/alertas/*").hasAnyRole("OPERADOR", "ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/alertas/**").hasAnyRole("OPERADOR", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/cruzamentos/**", "/alertas/**").authenticated()
-                        .anyRequest().denyAll())
+                        .anyRequest().authenticated())
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint((req, res, ex) ->
                                 escrever(res, mapper, 401, "Unauthorized", "Token ausente, inválido ou expirado", req.getRequestURI()))

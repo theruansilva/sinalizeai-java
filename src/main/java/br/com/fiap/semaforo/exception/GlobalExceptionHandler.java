@@ -2,11 +2,15 @@ package br.com.fiap.semaforo.exception;
 
 import br.com.fiap.semaforo.dto.ErroResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -19,6 +23,8 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErroResponse> validacao(MethodArgumentNotValidException ex, HttpServletRequest req) {
@@ -39,7 +45,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({HttpMessageNotReadableException.class, MethodArgumentTypeMismatchException.class,
-            HandlerMethodValidationException.class})
+            HandlerMethodValidationException.class, PropertyReferenceException.class})
     public ResponseEntity<ErroResponse> malformado(Exception ex, HttpServletRequest req) {
         return erro(HttpStatus.BAD_REQUEST, "Requisição malformada ou parâmetro inválido", req);
     }
@@ -52,6 +58,22 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErroResponse> conflito(DataIntegrityViolationException ex, HttpServletRequest req) {
         return erro(HttpStatus.CONFLICT, "Operação viola uma restrição de integridade dos dados", req);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErroResponse> inesperado(Exception ex, HttpServletRequest req) {
+        if (ex instanceof ErrorResponse er) {
+            int status = er.getStatusCode().value();
+            String msg = switch (status) {
+                case 404 -> "Rota não encontrada";
+                case 405 -> "Método HTTP não suportado nesta rota";
+                case 415 -> "Content-Type não suportado; use application/json";
+                default -> "Requisição não pôde ser processada";
+            };
+            return erro(HttpStatus.valueOf(status), msg, req);
+        }
+        log.error("Erro inesperado em {}", req.getRequestURI(), ex);
+        return erro(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno inesperado", req);
     }
 
     private ResponseEntity<ErroResponse> erro(HttpStatus status, String msg, HttpServletRequest req) {

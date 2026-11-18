@@ -108,6 +108,12 @@ class ApiIntegrationTest {
                 .andExpect(jsonPath("$.campos.limiteAguaCm").exists());
         mvc.perform(get("/alertas?severidade=INEXISTENTE").header("Authorization", admin))
                 .andExpect(status().isBadRequest());
+        mvc.perform(get("/cruzamentos?sort=inexistente").header("Authorization", admin))
+                .andExpect(status().isBadRequest()).andExpect(jsonPath("$.mensagem").exists());
+        mvc.perform(get("/rota-inexistente").header("Authorization", admin))
+                .andExpect(status().isNotFound()).andExpect(jsonPath("$.mensagem").value("Rota não encontrada"));
+        mvc.perform(put("/alertas/1/encerrar").header("Authorization", admin))
+                .andExpect(status().isMethodNotAllowed()).andExpect(jsonPath("$.status").value(405));
     }
 
     @Test
