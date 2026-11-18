@@ -199,6 +199,6 @@ O segredo do JWT e a senha do banco vêm apenas de variáveis de ambiente (`.env
 
 | Ferramenta | Para quê |
 |---|---|
-| Claude (Anthropic) | revisão dos requisitos da GS, explicação de erros, apoio na escrita de testes e do README |
+| Claude / LLMs | Apoio no desenho da arquitetura, estruturação e geração inicial do código-fonte, escrita de testes automatizados, documentação e revisão dos requisitos da GS |
 
-Todo código gerado com apoio de IA foi revisado, testado (`./mvnw test`) e entendido pelo grupo antes do commit.
+Todo código gerado com apoio de IA foi revisado, testado (`./mvnw test`), ajustado e compreendido pelo grupo antes do commit.
