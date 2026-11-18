@@ -100,7 +100,7 @@ Erros seguem um formato único (`@RestControllerAdvice` e handlers do Spring Sec
 {"timestamp":"...","status":400,"erro":"Bad Request","mensagem":"Dados inválidos","caminho":"/cruzamentos","campos":{"uf":"o tamanho deve ser entre 2 e 2"}}
 ```
 
-400 = validação ou parâmetro inválido, 401 = sem token ou login errado, 403 = papel insuficiente, 404 = id inexistente, 409 = violação de integridade, 422 = regra de negócio (e-mail duplicado, editar alerta do CEMADEN).
+400 = validação ou parâmetro inválido (inclusive `sort` por campo inexistente), 401 = sem token ou login errado, 403 = papel insuficiente, 404 = id ou rota inexistente, 405 = método não suportado na rota, 409 = violação de integridade, 415 = Content-Type diferente de JSON, 422 = regra de negócio (e-mail duplicado, editar alerta do CEMADEN), 500 = erro inesperado (logado, sem detalhes internos na resposta).
 
 ## Diagrama das entidades
 
@@ -194,3 +194,11 @@ O segredo do JWT e a senha do banco vêm apenas de variáveis de ambiente (`.env
 ## Integração CEMADEN
 
 `CemadenScheduler` roda a cada 5 min (`CEMADEN_INTERVALO`) e consulta `https://painelalertas.cemaden.gov.br/wsAlertas2`. Ele importa só os alertas ativos de **municípios que têm cruzamento cadastrado**, sem duplicar (usa `codigo_externo`), e encerra os que saíram do painel. Depois recalcula o modo dos cruzamentos afetados (nível Alto ou Muito Alto leva a `EVACUACAO`). Uma falha na fonte externa só gera log e não derruba a API. Se o endpoint (não documentado oficialmente) mudar, o plano B é o operador registrar o alerta em `POST /alertas`.
+
+## Uso de IA generativa
+
+| Ferramenta | Para quê |
+|---|---|
+| Claude (Anthropic) | revisão dos requisitos da GS, explicação de erros, apoio na escrita de testes e do README |
+
+Todo código gerado com apoio de IA foi revisado, testado (`./mvnw test`) e entendido pelo grupo antes do commit.
