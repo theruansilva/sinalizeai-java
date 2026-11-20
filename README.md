@@ -193,7 +193,7 @@ O segredo do JWT e a senha do banco vêm apenas de variáveis de ambiente (`.env
 
 ## Integração CEMADEN
 
-`CemadenScheduler` roda a cada 5 min (`CEMADEN_INTERVALO`) e consulta `https://painelalertas.cemaden.gov.br/wsAlertas2`. Ele importa só os alertas ativos de **municípios que têm cruzamento cadastrado**, sem duplicar (usa `codigo_externo`), e encerra os que saíram do painel. Depois recalcula o modo dos cruzamentos afetados (nível Alto ou Muito Alto leva a `EVACUACAO`). Uma falha na fonte externa só gera log e não derruba a API. Se o endpoint (não documentado oficialmente) mudar, o plano B é o operador registrar o alerta em `POST /alertas`.
+`CemadenScheduler` roda a cada 5 min (`CEMADEN_INTERVALO`) e consulta `https://painelalertas.cemaden.gov.br/wsAlertas2`. Ele importa só os alertas ativos de **municípios que têm cruzamento cadastrado**, sem duplicar (usa `codigo_externo`), e encerra os que saíram do painel. Depois recalcula o modo dos cruzamentos afetados (nível Alto ou Muito Alto leva a `EVACUACAO`). Uma falha na fonte externa (fora do ar ou resposta sem o campo `alertas`) só gera log, não derruba a API e **não encerra** os alertas já importados, então nenhum cruzamento sai de `EVACUACAO` por erro do painel. Se o endpoint (não documentado oficialmente) mudar, o plano B é o operador registrar o alerta em `POST /alertas`.
 
 ## Uso de IA generativa
 

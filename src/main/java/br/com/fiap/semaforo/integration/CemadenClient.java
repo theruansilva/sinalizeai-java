@@ -24,7 +24,11 @@ public class CemadenClient {
 
     public List<AlertaCemaden> buscarAtivos() {
         Resposta r = http.get().retrieve().body(Resposta.class);
-        return r == null || r.alertas() == null ? List.of() : r.alertas();
+        // sem o campo "alertas" a resposta é inválida: tratar como vazia encerraria todos os alertas ativos
+        if (r == null || r.alertas() == null) {
+            throw new IllegalStateException("Resposta do CEMADEN sem o campo 'alertas'");
+        }
+        return r.alertas();
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
