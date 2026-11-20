@@ -22,7 +22,7 @@ O dispositivo (Arduino UNO + gateway Python) consulta `GET /cruzamentos/{id}/mod
 
 Turma: 2TDSPR
 
-**Vídeo pitch:** _link a preencher_
+**Vídeo pitch:** https://youtu.be/P2mYBDpya9w
 
 ## Tecnologias
 
